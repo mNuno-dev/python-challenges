@@ -330,6 +330,7 @@ to the other number:
                         sum(divisors(n2))=n1
 """
 
+# divisors() has a complexity level of O(n)
 def divisors(num):
     divs = []
     divs.append(1)
@@ -340,16 +341,69 @@ def divisors(num):
     #     divs.append(num)
     return divs
         
-
-
-def calc_friends(max_exclusive):
+# calc_friends_naive() has a complexity level of O(n³)
+def calc_friends_naive(max_exclusive):
     friends_nums = []
     for n1 in range(1,max_exclusive):
         for n2 in range(1,max_exclusive):
-            if sum(divisors(n1)) == n2:
+            if sum(divisors(n1)) == n2 and sum(divisors(n2)) == n1:
                 friends_nums.append((n1,n2))
     
     return friends_nums
+
+
+# calc_friends() has a complexity level of O(n²)
+def calc_friends(max_exclusive):
+    friends_nums = []
+    for n1 in range(1,max_exclusive):
+        sum_div = sum(divisors(n1))
+        n2 = sum_div
+        if sum(divisors(n2)) == n1:
+            friends_nums.append((n1,n2))
+
+    return friends_nums    
+
+
+
+
+
+#Exercise 12: Prime Factorization
+"""Any natural number greater than 1 can be represented as a multiplication of primes.
+Remember the fact that 2 is also a prime. Write function calc_prime_factors(value)
+that returns a list of prime numbers whose multiplication yields the desired number."""
+
+# This function gets all prime numbers until a certain value
+def get_primes(value):
+    primes = [True]*(value+1)
+    #print(len(primes))
+    primes[0] = primes[1] = False # 0 and 1 shouldn't be considered as primes 
+    for i in range(2,int(value**0.5)+1):
+        for j in range(i*i,value+1,i):
+            if j % i == 0:
+                primes[j] = False
+
+    return [i for i, is_prime in enumerate(primes) if is_prime]
+
+
+
+
+def calc_prime_factors(value):
+    primes = get_primes(value)
+    prime_factors = []
+
+    val =  value # Creating a copy of value so that we can change it for operations
+    for prime in primes:
+        if val == 1:
+            break
+        while val % prime == 0:
+            val = val // prime
+            prime_factors.append(prime)
+    
+    return prime_factors
+
+
+
+
 
 
 
@@ -445,15 +499,39 @@ def main():
     # print(divisors(15))
     # print(divisors(25))
     # print(divisors(26))
-    print(calc_friends(300))
-    x = calc_friends(300)
-    print((284,220) in x)
+    # start_time_1 = time.time()
+    # print(calc_friends_naive(300))
+    # x = calc_friends_naive(300)
+    # print((284,220) in x)
+    # finish_time_1 = time.time()
+    # print("elapsed time O(n³) solution: ", finish_time_1 - start_time_1)
+
+
+    # start_time_2 = time.time()
+    # print(calc_friends(300))
+    # y = calc_friends(300)
+    # print((284,220) in y)
+    # finish_time_2 = time.time()
+    # print("elapsed time O(n²) solution: ", finish_time_2 - start_time_2)
 
     # print(sum(divisors(220)))
     # print("284")
 
-
+    # print(calc_friends(1250))
     # print(divisors(220))
+
+
+    # # Testing Exercise 12 Prime factorization
+
+    # print(get_primes(15))
+    # print(get_primes(17))
+    print(calc_prime_factors(8))
+    print(calc_prime_factors(14))
+    print(calc_prime_factors(42))
+    print(calc_prime_factors(1155))
+    print(calc_prime_factors(2222))    
+
+
 
 
 
